@@ -94,7 +94,7 @@ define Package/asterisk11
 $(call Package/asterisk11/Default)
   TITLE:=Complete open source PBX, v$(PKG_VERSION)
   MENU:=1
-  DEPENDS:=+libopenssl +libncurses +libpopt +libpthread +libsqlite3 +librt +libuuid +zlib @!TARGET_avr32
+  DEPENDS:=+libopenssl +libedit +libncurses +libpopt +libpthread +libsqlite3 +librt +libuuid +zlib @!TARGET_avr32
 endef
 
 define Package/asterisk11/description
