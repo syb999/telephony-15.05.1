@@ -263,7 +263,7 @@ define Package/$(PKG_NAME)
 $(call Package/$(PKG_NAME)/Default)
   MENU:=1
   TITLE:=FreeSWITCH open source telephony platform ($(PKG_SOURCE_VERSION_SHORT))
-  DEPENDS:=+FS_WITH_OPENSSL:libopenssl +libcurl +libdb47 +libfreetype +libgdbm $(ICONV_DEPENDS) $(INTL_DEPENDS) +libjpeg +libncurses +libopenldap +libpcre +libpng +libpthread +librt +libspeex +libspeexdsp +FS_WITH_SQLITE3:libsqlite3 +FS_WITH_SRTP:libsrtp +SSP_SUPPORT:libssp +libstdcpp +libuuid +PACKAGE_$(PKG_NAME)-mod-perl:perl +libvpx
+  DEPENDS:=+FS_WITH_OPENSSL:libopenssl +libcurl +libdb47 +libfreetype +libgdbm $(ICONV_DEPENDS) $(INTL_DEPENDS) +libjpeg-turbo +libncurses +libopenldap +libpcre +libpng +libpthread +librt +libspeex +libspeexdsp +FS_WITH_SQLITE3:libsqlite3 +FS_WITH_SRTP:libsrtp +SSP_SUPPORT:libssp +libstdcpp +libuuid +PACKAGE_$(PKG_NAME)-mod-perl:perl +libvpx
 endef
 
 
@@ -1064,7 +1064,7 @@ $(eval $(call BuildPlugin,snmp,SNMP AgentX Subagent,vanilla,,,,+libnetsnmp))
 $(eval $(call BuildPlugin,snom,SNOM specific features,vanilla,,,,))
 $(eval $(call BuildPlugin,sofia,SOFIA SIP,mod,,,,)) # ~/conf
 $(eval $(call BuildPlugin,sonar,Sonar Ping Timer,vanilla,,,,))
-$(eval $(call BuildPlugin,spandsp,Span DSP,mod,,,,+libjpeg +FS_WITH_LZMA:liblzma @FS_WITH_LZMA)) # ~/conf
+$(eval $(call BuildPlugin,spandsp,Span DSP,mod,,,,+libjpeg-turbo +FS_WITH_LZMA:liblzma @FS_WITH_LZMA)) # ~/conf
 $(eval $(call BuildPlugin,spidermonkey,JavaScript,vanilla,,,,@BROKEN)) # fails in js
 $(eval $(call BuildPlugin,spidermonkey-core_db,JavaScript DB,vanilla,,,,@BROKEN))
 $(eval $(call BuildPlugin,spidermonkey-curl,JavaScript Curl,vanilla,,,,@BROKEN))
