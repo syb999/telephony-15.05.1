@@ -141,6 +141,9 @@ $(foreach m,$(AST_CFG_FILES),$(call Package/asterisk11/install/conffile,$(1),$(m
 $(foreach m,$(AST_EMB_MODULES),$(call Package/asterisk11/install/module,$(1),$(m));)
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/asterisk.init $(1)/etc/init.d/asterisk
+	$(INSTALL_DIR) $(1)/etc/asterisk
+	$(CP) ./files/http.conf $(1)/etc/asterisk/
+	$(CP) ./files/manager.conf $(1)/etc/asterisk/
 endef
 
 define Package/$(PKG_NAME)/postinst
