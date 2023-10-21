@@ -109,13 +109,12 @@ define Package/asterisk18/conffiles
 /etc/asterisk/features.conf
 /etc/asterisk/indications.conf
 /etc/asterisk/logger.conf
-/etc/asterisk/manager.conf
 /etc/asterisk/rtp.conf
 /etc/init.d/asterisk
 endef
 
 AST_CFG_FILES:=\
-	asterisk.conf cel.conf ccss.conf extensions.conf features.conf indications.conf logger.conf manager.conf \
+	asterisk.conf cel.conf ccss.conf extensions.conf features.conf indications.conf logger.conf \
 	modules.conf sip.conf sip_notify.conf rtp.conf users.conf
 AST_EMB_MODULES:=\
 	app_dial app_echo app_macro app_playback codec_ulaw codec_gsm format_gsm format_pcm format_wav format_wav_gsm \
@@ -127,6 +126,8 @@ $(foreach m,$(AST_CFG_FILES),$(call Package/asterisk18/install/conffile,$(1),$(m
 $(foreach m,$(AST_EMB_MODULES),$(call Package/asterisk18/install/module,$(1),$(m));)
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/asterisk.init $(1)/etc/init.d/asterisk
+	$(CP) ./files/http.conf $(1)/etc/asterisk/
+	$(CP) ./files/manager.conf $(1)/etc/asterisk/
 endef
 
 define Package/$(PKG_NAME)/postinst
