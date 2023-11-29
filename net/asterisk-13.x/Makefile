@@ -9,12 +9,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=asterisk13
-PKG_VERSION:=13.19.2
-PKG_RELEASE:=2
+PKG_VERSION:=13.20.0
+PKG_RELEASE:=6
 
 PKG_SOURCE:=asterisk-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://downloads.asterisk.org/pub/telephony/asterisk/releases/
-PKG_MD5SUM:=3906b9fd37d02e93c72f0030fd7919c6
+PKG_SOURCE_URL:=https://downloads.asterisk.org/pub/telephony/asterisk/releases
+PKG_MD5SUM:=2d97a2cdee95abe80504475b7dc0073e
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/asterisk-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=libxml2/host
@@ -237,13 +237,8 @@ CONFIGURE_ARGS+= \
 	--with-srtp="$(STAGING_DIR)/usr"
 endif
 
-ifeq ($(CONFIG_PACKAGE_$(PKG_NAME)-pjsip)$(CONFIG_PACKAGE_$(PKG_NAME)-res-pjproject)$(CONFIG_PACKAGE_$(PKG_NAME)-res-rtp-asterisk),)
 CONFIGURE_ARGS+= \
 	--without-pjproject
-else
-CONFIGURE_ARGS+= \
-	--with-pjproject="$(STAGING_DIR)/usr"
-endif
 
 CONFIGURE_VARS += \
 	ac_cv_path_ac_pt_CONFIG_LIBXML2=$(STAGING_DIR)/host/bin/xml2-config
@@ -265,8 +260,8 @@ MAKE_FLAGS+= \
 AST_MENUSELECT_OPTS = \
 	--without-newt \
 	--without-curses \
-	--with-ncurses="$(STAGING_DIR_HOST)/usr" \
-	--with-libxml2="$(STAGING_DIR_HOST)/usr"
+	--with-ncurses="$(STAGING_DIR)/usr" \
+	--with-libxml2="$(STAGING_DIR)/usr"
 
 define Build/Configure
 	(cd $(PKG_BUILD_DIR); \
@@ -279,13 +274,13 @@ define Build/Configure
 		$(HOST_CONFIGURE_ARGS) \
 		$(AST_MENUSELECT_OPTS) \
 		LDFLAGS="$(HOST_LDFLAGS) -lxml2" \
-		CFLAGS="$(HOST_CFLAGS) -I$(STAGING_DIR_HOST)/include/libxml2" \
+		CFLAGS="$(HOST_CFLAGS) -I$(STAGING_DIR)/usr/include/libxml2" \
 	);
 endef
 
 define Build/Compile
 	$(MAKE) -C "$(PKG_BUILD_DIR)/menuselect" \
-		CFLAGS="$(HOST_CFLAGS) -I$(STAGING_DIR_HOST)/include/libxml2" \
+		CFLAGS="$(HOST_CFLAGS) -I$(STAGING_DIR)/usr/include/libxml2" \
 		LDFLAGS="$(HOST_LDFLAGS) -lxml2"
 	$(MAKE) -C "$(PKG_BUILD_DIR)" menuselect-tree
 	cd "$(PKG_BUILD_DIR)" && \
@@ -413,7 +408,6 @@ $(eval $(call BuildAsterisk13Module,pbx-dundi,Dundi,provides Dundi Lookup servic
 $(eval $(call BuildAsterisk13Module,pbx-realtime,Realtime Switch,realtime switch support,,,pbx_realtime,,))
 $(eval $(call BuildAsterisk13Module,pbx-spool,Call Spool,outgoing call spool support,,,pbx_spool,,))
 $(eval $(call BuildAsterisk13Module,pgsql,PostgreSQL,PostgreSQL support,+libpq,cel_pgsql.conf cdr_pgsql.conf res_pgsql.conf,cel_pgsql cdr_pgsql res_config_pgsql,,))
-$(eval $(call BuildAsterisk13Module,pjsip,pjsip channel,the channel pjsip,+asterisk13-res-sorcery +asterisk13-res-pjproject +libpjsip +libpjmedia +libpjnath +libpjsip-simple +libpjsip-ua +libpjsua +libpjsua2,pjsip.conf pjsip_notify.conf pjsip_wizard.conf,chan_pjsip func_pjsip_aor func_pjsip_contact func_pjsip_endpoint res_pjsip res_pjsip_acl res_pjsip_authenticator_digest res_pjsip_caller_id res_pjsip_config_wizard res_pjsip_dialog_info_body_generator res_pjsip_diversion res_pjsip_dlg_options res_pjsip_dtmf_info res_pjsip_empty_info res_pjsip_endpoint_identifier_anonymous res_pjsip_endpoint_identifier_ip res_pjsip_endpoint_identifier_user res_pjsip_exten_state res_pjsip_header_funcs res_pjsip_history res_pjsip_logger res_pjsip_messaging res_pjsip_mwi res_pjsip_mwi_body_generator res_pjsip_nat res_pjsip_notify res_pjsip_one_touch_record_info res_pjsip_outbound_authenticator_digest res_pjsip_outbound_publish res_pjsip_outbound_registration res_pjsip_path res_pjsip_pidf_body_generator res_pjsip_pidf_digium_body_supplement res_pjsip_pidf_eyebeam_body_supplement res_pjsip_publish_asterisk res_pjsip_pubsub res_pjsip_refer res_pjsip_registrar res_pjsip_registrar_expire res_pjsip_rfc3326 res_pjsip_sdp_rtp res_pjsip_send_to_voicemail res_pjsip_session res_pjsip_sips_contact res_pjsip_t38 res_pjsip_transport_websocket res_pjsip_xpidf_body_generator,,))
 $(eval $(call BuildAsterisk13Module,res-adsi,Provide ADSI,Analog Display Services Interface capability,,,res_adsi,,))
 $(eval $(call BuildAsterisk13Module,res-ael-share,Shareable AEL code,support for shareable AEL code mainly between internal and external modules,,,res_ael_share,,))
 $(eval $(call BuildAsterisk13Module,res-agi,Asterisk Gateway Interface,Support for the Asterisk Gateway Interface extension,+asterisk13-res-speech,,res_agi,,))
@@ -422,16 +416,14 @@ $(eval $(call BuildAsterisk13Module,res-clioriginate,Calls via CLI,Originate cal
 $(eval $(call BuildAsterisk13Module,res-fax,FAX modules,Generic FAX resource for FAX technology resource modules,+asterisk13-res-timing-pthread,res_fax.conf,res_fax,,))
 $(eval $(call BuildAsterisk13Module,res-fax-spandsp,Spandsp T.38 and G.711,Spandsp T.38 and G.711 FAX Resource,+asterisk13-res-fax +libspandsp +libtiff,,res_fax_spandsp,,))
 $(eval $(call BuildAsterisk13Module,res-hep,HEPv3 API,Routines for integration with Homer using HEPv3,,hep.conf,res_hep,,))
-$(eval $(call BuildAsterisk13Module,res-hep-pjsip,PJSIP HEPv3 Logger,PJSIP logging with Homer,+asterisk13-res-hep +asterisk13-pjsip,,res_hep_pjsip,,))
 $(eval $(call BuildAsterisk13Module,res-hep-rtcp,RTCP HEPv3 Logger,RTCP logging with Homer,+asterisk13-res-hep,,res_hep_rtcp,,))
 $(eval $(call BuildAsterisk13Module,res-http-websocket,HTTP websocket support,WebSocket support for the Asterisk internal HTTP server,,,res_http_websocket,,))
 $(eval $(call BuildAsterisk13Module,res-monitor,PBX channel monitoring,call monitoring resource,+$(PKG_NAME)-func-periodic-hook,,res_monitor,,))
 $(eval $(call BuildAsterisk13Module,res-musiconhold,MOH,Music On Hold support,,musiconhold.conf,res_musiconhold,,))
 $(eval $(call BuildAsterisk13Module,res-parking,Phone Parking,Phone Parking application,+$(PKG_NAME)-bridge-holding,res_parking.conf,res_parking,,))
 $(eval $(call BuildAsterisk13Module,res-phoneprov,Phone Provisioning,Phone provisioning application for the asterisk internal http server,,phoneprov.conf,res_phoneprov,,))
-$(eval $(call BuildAsterisk13Module,res-pjproject,Bridge PJPROJECT to Asterisk logging,,+libpj +libpjlib-util +libpjmedia +libpjmedia +libpjnath +libpjsip-simple +libpjsip-ua +libpjsip +libpjsua +libpjsua2 +libsrtp,pjproject.conf,res_pjproject,,))
 $(eval $(call BuildAsterisk13Module,res-realtime,Realtime,Realtime Interface,,,res_realtime,,))
-$(eval $(call BuildAsterisk13Module,res-rtp-asterisk,RTP stack,Supports RTP and RTCP with Symmetric RTP support for NAT traversal,+libpjsip +libpjmedia +libpjnath +libpjsip-simple +libpjsip-ua +libpjsua +libpjsua2,rtp.conf,res_rtp_asterisk,,))
+$(eval $(call BuildAsterisk13Module,res-rtp-asterisk,RTP stack,Supports RTP and RTCP with Symmetric RTP support for NAT traversal,,rtp.conf,res_rtp_asterisk,,))
 $(eval $(call BuildAsterisk13Module,res-rtp-multicast,RTP multicast engine,Multicast RTP Engine,,,res_rtp_multicast,,))
 $(eval $(call BuildAsterisk13Module,res-smdi,Provide SMDI,Simple Message Desk Interface capability,,smdi.conf,res_smdi,,))
 $(eval $(call BuildAsterisk13Module,res-sorcery,Sorcery data layer,Sorcery backend modules for data access intended for using realtime as backend,,sorcery.conf,res_sorcery_astdb res_sorcery_config res_sorcery_memory res_sorcery_realtime,,))
