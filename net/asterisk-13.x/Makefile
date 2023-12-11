@@ -204,6 +204,7 @@ CONFIGURE_ARGS+= \
 	--without-nbs \
 	--without-neon \
 	--without-neon29 \
+	--with-libedit="$(STAGING_DIR)/usr" \
 	--with-libxml2 \
 	--with-ncurses="$(STAGING_DIR)/usr" \
 	--without-netsnmp \
@@ -229,7 +230,7 @@ CONFIGURE_ARGS+= \
 	--with-z="$(STAGING_DIR)/usr" \
 	--with-sounds-cache="$(DL_DIR)"
 
-ifeq ($(CONFIG_PACKAGE_$(PKG_NAME)-res-pjproject)$(CONFIG_PACKAGE_$(PKG_NAME)-res-srtp),)
+ifeq ($(CONFIG_PACKAGE_$(PKG_NAME)-res-srtp),)
 CONFIGURE_ARGS+= \
 	--without-srtp
 else
@@ -332,6 +333,7 @@ $(eval $(call BuildAsterisk13Module,app-disa,Direct Inward System Access,Direct 
 $(eval $(call BuildAsterisk13Module,app-exec,Exec application,support for application execution,,,app_exec,,))
 $(eval $(call BuildAsterisk13Module,app-minivm,Minimal voicemail system,a voicemail system in small building blocks working together based on the Comedian Mail voicemail,,extensions_minivm.conf minivm.conf,app_minivm,,))
 $(eval $(call BuildAsterisk13Module,app-mixmonitor,Record a call and mix the audio,record a call and mix the audio during the recording,,,app_mixmonitor,,))
+$(eval $(call BuildAsterisk13Module,app-mp3,Silly MP3,silly application to play an MP3 file [uses mpg123],+mpg123,,app_mp3,,))
 $(eval $(call BuildAsterisk13Module,app-originate,Originate a call,originating an outbound call and connecting it to a specified extension or application,,,app_originate,,))
 $(eval $(call BuildAsterisk13Module,app-playtones,Playtones application,play a tone list,,,app_playtones,,))
 $(eval $(call BuildAsterisk13Module,app-queue,True Call Queueing,support for ACD,,queues.conf queuerules.conf,app_queue,))
@@ -401,7 +403,9 @@ $(eval $(call BuildAsterisk13Module,func-periodic-hook,Periodic dialplan hooks,E
 $(eval $(call BuildAsterisk13Module,func-realtime,realtime,the realtime dialplan function,,,func_realtime,,))
 $(eval $(call BuildAsterisk13Module,func-shell,Shell,support for shell execution,,,func_shell,,))
 $(eval $(call BuildAsterisk13Module,func-uri,URI encoding and decoding,Encodes and decodes URI-safe strings,,,func_uri,,))
+$(eval $(call BuildAsterisk13Module,func-version,Get Asterisk version/build info,return the current version strings,,,func_version,,))
 $(eval $(call BuildAsterisk13Module,func-vmcount,vmcount dialplan,a vmcount dialplan function,,,func_vmcount,,))
+$(eval $(call BuildAsterisk13Module,func-volume,Technology independent volume control,technology independent volume control,,,func_volume,,))
 $(eval $(call BuildAsterisk13Module,odbc,ODBC,ODBC support,+libpthread +libc +unixodbc,cdr_adaptive_odbc.conf cdr_odbc.conf cel_odbc.conf func_odbc.conf res_odbc.conf,cdr_adaptive_odbc cdr_odbc cel_odbc func_odbc res_config_odbc res_odbc res_odbc_transaction,,))
 $(eval $(call BuildAsterisk13Module,pbx-ael,Asterisk Extension Logic,support for symbolic Asterisk Extension Logic,+$(PKG_NAME)-res-ael-share,extensions.ael,pbx_ael,,))
 $(eval $(call BuildAsterisk13Module,pbx-dundi,Dundi,provides Dundi Lookup service for Asterisk,,dundi.conf,pbx_dundi,,))
@@ -428,7 +432,7 @@ $(eval $(call BuildAsterisk13Module,res-rtp-multicast,RTP multicast engine,Multi
 $(eval $(call BuildAsterisk13Module,res-smdi,Provide SMDI,Simple Message Desk Interface capability,,smdi.conf,res_smdi,,))
 $(eval $(call BuildAsterisk13Module,res-sorcery,Sorcery data layer,Sorcery backend modules for data access intended for using realtime as backend,,sorcery.conf,res_sorcery_astdb res_sorcery_config res_sorcery_memory res_sorcery_realtime,,))
 $(eval $(call BuildAsterisk13Module,res-speech,Speech Recognition API,Support for the Asterisk Generic Speech Recognition API,,,res_speech,,))
-$(eval $(call BuildAsterisk13Module,res-srtp,SRTP Support,Secure RTP connection,+libsrtp,,res_srtp,,))
+$(eval $(call BuildAsterisk13Module,res-srtp,SRTP Support,Secure RTP connection,+libsrtp2,,res_srtp,,))
 $(eval $(call BuildAsterisk13Module,res-timing-dahdi,DAHDI Timing Interface,DAHDI timing interface,+asterisk13-chan-dahdi,,res_timing_dahdi,,))
 $(eval $(call BuildAsterisk13Module,res-timing-pthread,pthread Timing Interface,POSIX pthreads Timing Interface,,,res_timing_pthread,,))
 $(eval $(call BuildAsterisk13Module,res-timing-timerfd,Timerfd Timing Interface,Timing interface provided by Linux kernel,,,res_timing_timerfd,,))
