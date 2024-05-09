@@ -9,12 +9,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=asterisk13
-PKG_VERSION:=13.20.0
-PKG_RELEASE:=6
+PKG_VERSION:=13.24.0
+PKG_RELEASE:=3
 
 PKG_SOURCE:=asterisk-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://downloads.asterisk.org/pub/telephony/asterisk/releases
-PKG_MD5SUM:=2d97a2cdee95abe80504475b7dc0073e
+PKG_MD5SUM:=cdadf7c8959d2638d26b28a8d1112999
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/asterisk-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=libxml2/host
@@ -98,7 +98,7 @@ define Package/asterisk13
 $(call Package/asterisk13/Default)
   TITLE:=Complete open source PBX, v$(PKG_VERSION)
   MENU:=1
-  DEPENDS:=+jansson +libncurses +libopenssl +libpopt +librt +libsqlite3 +libstdcpp +libuuid +libxml2 +libxslt +zlib +libedit
+  DEPENDS:=+jansson +libopenssl +libpopt +librt +libsqlite3 +libstdcpp +libuuid +libxml2 +libxslt +zlib +libedit
 endef
 
 define Package/asterisk13/description
@@ -206,7 +206,6 @@ CONFIGURE_ARGS+= \
 	--without-neon29 \
 	--with-libedit="$(STAGING_DIR)/usr" \
 	--with-libxml2 \
-	--with-ncurses="$(STAGING_DIR)/usr" \
 	--without-netsnmp \
 	--without-newt \
 	--without-ogg \
@@ -261,7 +260,6 @@ MAKE_FLAGS+= \
 AST_MENUSELECT_OPTS = \
 	--without-newt \
 	--without-curses \
-	--with-ncurses="$(STAGING_DIR)/usr" \
 	--with-libxml2="$(STAGING_DIR)/usr"
 
 define Build/Configure
@@ -324,13 +322,23 @@ $(eval $(call BuildPackage,asterisk13-sounds))
 
 $(eval $(call BuildAsterisk13Module,app-alarmreceiver,Alarm receiver,Central Station Alarm receiver for Ademco Contact ID,,,app_alarmreceiver,,))
 $(eval $(call BuildAsterisk13Module,app-authenticate,Authenticate commands,Execute arbitrary authenticate commands,,,app_authenticate,,))
+$(eval $(call BuildAsterisk13Module,app-bridgewait,Holding bridge,place a channel into a holding bridge,+$(PKG_NAME)-bridge-holding,,app_bridgewait,,))
+$(eval $(call BuildAsterisk13Module,app-celgenuserevent,User-defined CEL event,generate user-defined CEL event,,,app_celgenuserevent,,))
 $(eval $(call BuildAsterisk13Module,app-chanisavail,Channel availability check,support for checking if a channel is available,,,app_chanisavail,,))
+$(eval $(call BuildAsterisk13Module,app-channelredirect,Redirect a channel,ChannelRedirect application,,,app_channelredirect,,))
 $(eval $(call BuildAsterisk13Module,app-chanspy,Channel listen in,support for listening in on any channel,,,app_chanspy,,))
 $(eval $(call BuildAsterisk13Module,app-confbridge,ConfBridge,Software bridge for multi-party audio conferencing,+asterisk13-bridge-builtin-features +asterisk13-bridge-simple +asterisk13-bridge-softmix,confbridge.conf,app_confbridge,,))
+$(eval $(call BuildAsterisk13Module,app-controlplayback,Control playback,trivial application to control playback of a sound file,,,app_controlplayback,,))
 $(eval $(call BuildAsterisk13Module,app-dahdiras,Execute an ISDN RAS,support for executing an ISDN RAS using DAHDI,+asterisk13-chan-dahdi,,app_dahdiras,,))
-$(eval $(call BuildAsterisk13Module,app-directed_pickup,Directed call pickup,support for directed call pickup,,,app_directed_pickup,,))
+$(eval $(call BuildAsterisk13Module,app-dictate,Virtual dictation machine,virtual dictation machine application,,,app_dictate,,))
+$(eval $(call BuildAsterisk13Module,app-directed-pickup,Directed call pickup,support for directed call pickup,,,app_directed_pickup,,))
+$(eval $(call BuildAsterisk13Module,app-directory,Extension directory,provide a directory of extensions,,,app_directory,,))
+$(eval $(call BuildAsterisk13Module,app-dumpchan,Dump info about channel,application to dump channel variables,,,app_dumpchan,,))
 $(eval $(call BuildAsterisk13Module,app-disa,Direct Inward System Access,Direct Inward System Access,,,app_disa,,))
 $(eval $(call BuildAsterisk13Module,app-exec,Exec application,support for application execution,,,app_exec,,))
+$(eval $(call BuildAsterisk13Module,app-externalivr,External IVR interface,external IVR application interface,,,app_externalivr,,))
+$(eval $(call BuildAsterisk13Module,app-ices,Encode and stream,stream to an icecast server via ICES,,,app_ices,,))
+$(eval $(call BuildAsterisk13Module,app-image,Image transmission,transmit an image,,,app_image,,))
 $(eval $(call BuildAsterisk13Module,app-minivm,Minimal voicemail system,a voicemail system in small building blocks working together based on the Comedian Mail voicemail,,extensions_minivm.conf minivm.conf,app_minivm,,))
 $(eval $(call BuildAsterisk13Module,app-mixmonitor,Record a call and mix the audio,record a call and mix the audio during the recording,,,app_mixmonitor,,))
 $(eval $(call BuildAsterisk13Module,app-mp3,Silly MP3,silly application to play an MP3 file [uses mpg123],+mpg123,,app_mp3,,))
@@ -342,7 +350,10 @@ $(eval $(call BuildAsterisk13Module,app-readexten,Extension to variable,a trivia
 $(eval $(call BuildAsterisk13Module,app-record,Record sound file,to record a sound file,,,app_record,,))
 $(eval $(call BuildAsterisk13Module,app-sayunixtime,Say Unix time,an application to say Unix time,,,app_sayunixtime,,))
 $(eval $(call BuildAsterisk13Module,app-senddtmf,Send DTMF digits,Sends arbitrary DTMF digits,,,app_senddtmf,,))
-$(eval $(call BuildAsterisk13Module,app-sms,SMS,SMS support (ETSI ES 201 912 protocol 1),+libpopt +libstdcpp,,app_sms,,))
+$(eval $(call BuildAsterisk13Module,app-sendtext,Send text,transmit a text message,,,app_sendtext,,))
+$(eval $(call BuildAsterisk13Module,app-sms,SMS,SMS support (ETSI ES 201 912 protocol 1),,,app_sms,,))
+$(eval $(call BuildAsterisk13Module,app-softhangup,Hang up requested channel,SoftHangup application,,,app_softhangup,,))
+$(eval $(call BuildAsterisk13Module,app-speech,Dialplan Speech,Dialplan Speech Applications,+asterisk13-res-speech,,app_speech_utils,,))
 $(eval $(call BuildAsterisk13Module,app-stack,Stack applications,Stack applications Gosub Return etc.,+asterisk13-res-agi,,app_stack,,))
 $(eval $(call BuildAsterisk13Module,app-system,System exec,support for executing system commands,,,app_system,,))
 $(eval $(call BuildAsterisk13Module,app-talkdetect,File playback with audio detect,for file playback with audio detect,,,app_talkdetect,,))
@@ -358,8 +369,13 @@ $(eval $(call BuildAsterisk13Module,bridge-softmix,Multi-party software based ch
 $(eval $(call BuildAsterisk13Module,cdr,Provides CDR,Call Detail Record,,cdr.conf cdr_custom.conf cdr_manager.conf cdr_syslog.conf,app_cdr app_forkcdr cdr_custom cdr_manager cdr_syslog func_cdr,,))
 $(eval $(call BuildAsterisk13Module,cdr-csv,Provides CDR CSV,Call Detail Record with CSV support,,,cdr_csv,,))
 $(eval $(call BuildAsterisk13Module,cdr-sqlite3,Provides CDR SQLITE3,Call Detail Record with SQLITE3 support,libsqlite3,,cdr_sqlite3_custom,,))
+$(eval $(call BuildAsterisk13Module,chan-alsa,ALSA channel,the channel chan_alsa,+alsa-lib,alsa.conf,chan_alsa,,))
+$(eval $(call BuildAsterisk13Module,chan-bridge-media,Bridge media channel driver,bridge media channel driver,,,chan_bridge_media,,))
 $(eval $(call BuildAsterisk13Module,chan-dahdi,DAHDI channel,DAHDI channel support,+dahdi-tools-libtonezone +kmod-dahdi +libpri,chan_dahdi.conf,chan_dahdi,,))
 $(eval $(call BuildAsterisk13Module,chan-iax2,IAX2 channel,IAX support,+asterisk13-res-timing-timerfd,iax.conf iaxprov.conf,chan_iax2,,))
+$(eval $(call BuildAsterisk13Module,chan-mgcp,MGCP,Media Gateway Control Protocol,,mgcp.conf,chan_mgcp,,))
+$(eval $(call BuildAsterisk13Module,chan-phone,Linux telephony API,generic Linux telephony interface driver,,phone.conf,chan_phone,,))
+$(eval $(call BuildAsterisk13Module,chan-rtp,RTP media channel,RTP [Multicast and Unicast] media channel,,,chan_rtp,,))
 $(eval $(call BuildAsterisk13Module,chan-sip,SIP channel,the channel chan_sip,+asterisk13-app-confbridge,sip.conf sip_notify.conf,chan_sip,,))
 $(eval $(call BuildAsterisk13Module,chan-skinny,Skinny channel,the channel chan_skinny,,skinny.conf,chan_skinny,,))
 $(eval $(call BuildAsterisk13Module,chan-unistim,Unistim channel,channel driver for the UNISTIM (Unified Networks IP Stimulus) protocol,,unistim.conf,chan_unistim,,))
@@ -375,33 +391,46 @@ $(eval $(call BuildAsterisk13Module,codec-lpc10,Linear to LPC10 translation,tran
 $(eval $(call BuildAsterisk13Module,codec-resample,resample sLinear audio,resample sLinear audio,,,codec_resample,,))
 $(eval $(call BuildAsterisk13Module,codec-ulaw,Signed linear to ulaw translation,translation between signed linear and ulaw codecs,,,codec_ulaw,,))
 $(eval $(call BuildAsterisk13Module,curl,CURL,CURL support,+libcurl,,func_curl res_config_curl res_curl,,))
+$(eval $(call BuildAsterisk13Module,format-g719,G.719,ITU G.719 64kbps-only,,,format_g719,,))
+$(eval $(call BuildAsterisk13Module,format-g723,G.723.1,old-style G.723.1 frame/timestamp format,,,format_g723,,))
 $(eval $(call BuildAsterisk13Module,format-g726,G.726,support for headerless G.726 16/24/32/40kbps data format,,,format_g726,,))
 $(eval $(call BuildAsterisk13Module,format-g729,G.729,support for raw headerless G729 data,,,format_g729,,))
 $(eval $(call BuildAsterisk13Module,format-gsm,GSM format,support for GSM format,,,format_gsm,,))
 $(eval $(call BuildAsterisk13Module,format-h263,H263 format,support for H264 format,,,format_h263,,))
 $(eval $(call BuildAsterisk13Module,format-h264,H264 format,support for H264 format,,,format_h264,,))
 $(eval $(call BuildAsterisk13Module,format-ilbc,ILBC format,support for ILBC format,,,format_ilbc,,))
+$(eval $(call BuildAsterisk13Module,format-jpeg,JPEG image format,JPEG file format,,,format_jpeg,,))
+$(eval $(call BuildAsterisk13Module,format-mp3,MP3 format,support for MP3 format,@BROKEN,,format_mp3,,)) # requires patched mpg123 source
 $(eval $(call BuildAsterisk13Module,format-pcm,PCM format,support for PCM format,,,format_pcm,,))
 $(eval $(call BuildAsterisk13Module,format-sln,Raw slinear format,support for raw slinear format,,,format_sln,,))
 $(eval $(call BuildAsterisk13Module,format-vox,VOX format,support for ADPCM vox format,,,format_vox,,))
 $(eval $(call BuildAsterisk13Module,format-wav,WAV format (8000hz Signed Linear),support for proprietary Microsoft WAV format (8000hz Signed Linear),,,format_wav,,))
 $(eval $(call BuildAsterisk13Module,format-wav-gsm,WAV format (Proprietary GSM),support for proprietary Microsoft WAV format (Proprietary GSM),,,format_wav_gsm,,))
+$(eval $(call BuildAsterisk13Module,func-aes,AES dialplan functions,AES encryption/decryption dialplan functions,,,func_aes,,))
 $(eval $(call BuildAsterisk13Module,func-base64,base64 support,support of base64 function,,,func_base64,,))
 $(eval $(call BuildAsterisk13Module,func-blacklist,Blacklist on callerid,looking up the callerid number and see if it is blacklisted,,,func_blacklist,,))
 $(eval $(call BuildAsterisk13Module,func-channel,Channel info,Channel info dialplan function,,,func_channel,,))
+$(eval $(call BuildAsterisk13Module,func-config,Configuration file variable access,a function to retrieve variables from an Asterisk configuration file,,,func_config,,))
 $(eval $(call BuildAsterisk13Module,func-cut,CUT function,CUT function,,,func_cut,,))
 $(eval $(call BuildAsterisk13Module,func-db,Database interaction,functions for interaction with the database,,,func_db app_db,))
 $(eval $(call BuildAsterisk13Module,func-devstate,Blinky lights control,functions for manually controlled blinky lights,,,func_devstate,,))
+$(eval $(call BuildAsterisk13Module,func-dialgroup,Dialgroup dialplan function,dialgroup dialplan function,,,func_dialgroup,,))
+$(eval $(call BuildAsterisk13Module,func-dialplan,Dialplan context/extension/priority checking functions,dialplan group functions check if a dialplan entry exists,,,func_dialplan,,))
 $(eval $(call BuildAsterisk13Module,func-enum,ENUM,ENUM,,enum.conf,func_enum,))
 $(eval $(call BuildAsterisk13Module,func-env,Environment functions,Environment dialplan functions,,,func_env,))
 $(eval $(call BuildAsterisk13Module,func-extstate,Hinted extension state,retrieving the state of a hinted extension for dialplan control,,,func_extstate,,))
 $(eval $(call BuildAsterisk13Module,func-global,Global variable,global variable dialplan functions,,,func_global,,))
 $(eval $(call BuildAsterisk13Module,func-groupcount,Group count,for counting number of channels in the specified group,,,func_groupcount,,))
 $(eval $(call BuildAsterisk13Module,func-math,Math functions,Math functions,,,func_math,))
+$(eval $(call BuildAsterisk13Module,func-md5,MD5 digest dialplan functions,MD5 digest related dialplan functions,,,func_md5,,))
 $(eval $(call BuildAsterisk13Module,func-module,Simple module check function,Simple module check function,,,func_module,))
 $(eval $(call BuildAsterisk13Module,func-periodic-hook,Periodic dialplan hooks,Execute a periodic dialplan hook into the audio of a call,+$(PKG_NAME)-app-chanspy +$(PKG_NAME)-func-cut +$(PKG_NAME)-func-groupcount +$(PKG_NAME)-func-uri,,func_periodic_hook,,))
 $(eval $(call BuildAsterisk13Module,func-realtime,realtime,the realtime dialplan function,,,func_realtime,,))
 $(eval $(call BuildAsterisk13Module,func-shell,Shell,support for shell execution,,,func_shell,,))
+$(eval $(call BuildAsterisk13Module,func-sprintf,SPRINTF dialplan function,string manipulation dialplan functions,,,func_sprintf,,))
+$(eval $(call BuildAsterisk13Module,func-srv,SRV functions,SRV related dialplan functions,,,func_srv,,))
+$(eval $(call BuildAsterisk13Module,func-sysinfo,System information related functions,SYSINFO function to return various system data,,,func_sysinfo,,))
+$(eval $(call BuildAsterisk13Module,func-talkdetect,Talk detection dialplan function,function that raises events when talking is detected on a channel,,,func_talkdetect,,))
 $(eval $(call BuildAsterisk13Module,func-uri,URI encoding and decoding,Encodes and decodes URI-safe strings,,,func_uri,,))
 $(eval $(call BuildAsterisk13Module,func-version,Get Asterisk version/build info,return the current version strings,,,func_version,,))
 $(eval $(call BuildAsterisk13Module,func-vmcount,vmcount dialplan,a vmcount dialplan function,,,func_vmcount,,))
