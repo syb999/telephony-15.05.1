@@ -111,7 +111,6 @@ define Package/asterisk11/conffiles
 /etc/asterisk/features.conf
 /etc/asterisk/indications.conf
 /etc/asterisk/logger.conf
-/etc/asterisk/manager.conf
 /etc/asterisk/modules.conf
 /etc/asterisk/res_config_sqlite3.conf
 /etc/asterisk/rtp.conf
@@ -125,7 +124,7 @@ endef
 AST_CFG_FILES:= \
 	asterisk.conf acl.conf ccss.conf extconfig.conf \
 	extensions.conf features.conf indications.conf \
-	logger.conf manager.conf modules.conf res_config_sqlite3.conf \
+	logger.conf modules.conf res_config_sqlite3.conf \
 	rtp.conf sip_notify.conf sip.conf udptl.conf users.conf
 AST_EMB_MODULES:=\
 	app_dial app_echo app_macro app_playback codec_ulaw format_pcm func_callerid \
